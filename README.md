@@ -1,14 +1,8 @@
-Here is a great README for your GitHub repository. Just copy, paste, and replace the placeholder links.
-
------
-
 # 🎵 Pulse: Audio Waveform Video Generator
 
 Generate beautiful, dynamic waveform videos from any audio file. This [Cog](https://github.com/replicate/cog) model creates a stylish dotted waveform and overlays it on a background image that can pulse to the music or slowly zoom in.
 
 [**Run this model on Replicate »**](https://replicate.com/craftfulcharles/waveform)
-
-*(Replace this with a link to your own demo GIF or video)*
 
 ## ✨ Features
 
