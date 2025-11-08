@@ -1,18 +1,16 @@
 build:
   python_version: "3.10"
   
-  # System packages
   system_packages:
     - "ffmpeg"
-    - "libgl1"  # <-- This is the corrected package name
+    - "libgl1"
     - "libglib2.0-0"
     
-  # Our Python requirements
   python_packages:
     - "numpy"
     - "librosa"
     - "moviepy==1.0.3"
-    - "opencv-python"
+    - "opencv-python-headless"
+    - "soundfile"  # <-- ADD THIS LINE
 
-# Point to the Predictor class in predict.py
 predict: "predict.py:Predictor"
