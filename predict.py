@@ -220,7 +220,7 @@ class Predictor(BasePredictor):
         # --- START OF FIX: Explicitly close moviepy clips to fix hang ---
         # -----------------------------------------------------------------
         print("Encoding video...")
-        #print        
+        
         video_clip = None
         audio_clip = None
         
@@ -242,7 +242,8 @@ class Predictor(BasePredictor):
                 audio_clip.close()
             if video_clip:
                 video_clip.close()
-        
+            print("Clearing librosa cache to prevent warm-start hangs...")
+            librosa.cache.clear()        
         # -----------------------------------------------------------------
         # --- END OF FIX ---
         # -----------------------------------------------------------------
