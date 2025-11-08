@@ -3,12 +3,9 @@ import librosa
 import numpy as np
 from moviepy.editor import ImageSequenceClip, AudioFileClip
 from pathlib import Path
-
-# Cog imports
 from cog import BasePredictor, Input, Path
 
 # --- Helper Function ---
-# We keep this outside the class, or as a static method
 def draw_symmetric_dots_vectorized(frame, overlay, x_coords, y1_coords, y2_coords, radius, color_full, color_half):
     """Vectorized version of drawing dots. Modifies 'frame' in-place."""
     h, w = frame.shape[:2]
@@ -41,7 +38,6 @@ def draw_symmetric_dots_vectorized(frame, overlay, x_coords, y1_coords, y2_coord
 class Predictor(BasePredictor):
     def setup(self):
         """Load the model into memory to make running multiple predictions efficient"""
-        # We don't have a model to load, so we can just pass
         pass
 
     def predict(
@@ -67,7 +63,6 @@ class Predictor(BasePredictor):
     ) -> Path:
         """Run a single prediction on the model"""
         
-        # Define a temporary output path for the video
         output_path = Path("/tmp/output.mp4")
 
         print("Loading audio file...")
@@ -221,14 +216,36 @@ class Predictor(BasePredictor):
             rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             frames.append(rgb_frame)
 
+        # -----------------------------------------------------------------
+        # --- START OF FIX: Explicitly close moviepy clips to fix hang ---
+        # -----------------------------------------------------------------
         print("Encoding video...")
-        clip = ImageSequenceClip(frames, fps=fps)
-        clip.audio = AudioFileClip(str(audio_file))
-        clip.write_videofile(str(output_path), fps=fps, codec='libx264',
-                            preset='ultrafast',
-                            audio_codec='aac',
-                            threads=4,
-                            logger=None)
+        
+        video_clip = None
+        audio_clip = None
+        
+        try:
+            video_clip = ImageSequenceClip(frames, fps=fps)
+            audio_clip = AudioFileClip(str(audio_file))
+            video_clip.audio = audio_clip
+            
+            video_clip.write_videofile(str(output_path), fps=fps, codec='libx264',
+                                preset='ultrafast',
+                                audio_codec='aac',
+                                threads=4,
+                                logger=None)
+        
+        finally:
+            # This is the crucial part that cleans up resources
+            print("Cleaning up video and audio clips...")
+            if audio_clip:
+                audio_clip.close()
+            if video_clip:
+                video_clip.close()
+        
+        # -----------------------------------------------------------------
+        # --- END OF FIX ---
+        # -----------------------------------------------------------------
         
         print(f"Video saved to {output_path}")
         return output_path
