@@ -220,7 +220,7 @@ class Predictor(BasePredictor):
         # --- START OF FIX: Explicitly close moviepy clips to fix hang ---
         # -----------------------------------------------------------------
         print("Encoding video...")
-        
+        #print        
         video_clip = None
         audio_clip = None
         
