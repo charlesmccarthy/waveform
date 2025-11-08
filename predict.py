@@ -36,7 +36,6 @@ def draw_symmetric_dots_vectorized(frame, overlay, x_coords, y1_coords, y2_coord
 
 # --- Predictor Class ---
 class Predictor(BasePredictor):
-# Forcing a new build
     def setup(self):
         """Load the model into memory to make running multiple predictions efficient"""
         pass
